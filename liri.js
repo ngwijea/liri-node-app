@@ -36,12 +36,18 @@ switch(input) {
 }
 
 function displayConcert(info) {
-    axios.get("https://rest.bandsintown.com/artists/" + info + "/events?app_id=codingbootcamp")
-    .then(function(response) {
-        for (let i = 0; i < response.data.length; i++) {
+    var stringData = info.split(",")
+    var queryUrl = "https://rest.bandsintown.com/artists/" + stringData + "/events?app_id=codingbootcamp";
+    console.log(queryUrl);
+
+    axios.get(queryUrl).then(
+        function(response) {
+        for (var i = 0; i < response.data.length; i++) {
 
             var date = response.data[i].datetime;
+            console.log(date)
             var dateInfo = date.replace("T"," ")
+            console.log(dateInfo)
 
             var concertData = 
                 "\n--------------------------------------------------------------------\n" +
@@ -63,13 +69,13 @@ function displaySpotify(info) {
         info = "The Sign";
     }
     spotify
-    .search({ type: 'track', query: info })
+    .search({ type: 'track', query: info})
     .then(function(response) {
         for (var i = 0; i < 5; i++) {
             var spotifyData = 
                 "--------------------------------------------------------------------" +
                     "\nArtist(s): " + response.tracks.items[i].artists[0].name + 
-                    "\nSong Name: " + response.tracks.items[i].name +
+                    "\nSong's Name: " + response.tracks.items[i].name +
                     "\nAlbum Name: " + response.tracks.items[i].album.name +
                     "\nPreview Link: " + response.tracks.items[i].preview_url;
                     
@@ -92,7 +98,7 @@ function displayMovie(info) {
                     "\nTitle of the movie: " + response.data.Title + 
                     "\nYear of Release: " + response.data.Year +
                     "\nIMDB Rating: " + response.data.imdbRating +
-                    "\nRotten Tomatoes Rating: " + response.data.Ratings[1].Value +
+                    "\nRotten Tomatoes Rating: " + response.data.Ratings[1].info +
                     "\nCountry of Production: " + response.data.Country +
                     "\nLanguage: " + response.data.Language +
                     "\nPlot: " + response.data.Plot +
@@ -105,15 +111,15 @@ function displayMovie(info) {
     
 }
 
-function displayInput(value) {
+function displayInput(info) {
 
-    fs.readFile("random.txt", "utf8", function(error, data) {
+    fs.readFile("random.txt", "utf8", (error, data) => {
         if (error) {
             return console.log(error);
         }
-        var dataArr = data.split(',');
-        displaySpotify(dataArr[0], dataArr[1]);
+        var dataArr = data.split(",");
+        console.log(dataArr);
+        displaySpotify(dataArr);
+        console.log(displaySpotify)
     })
 }
-
-userData();
